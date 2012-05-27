@@ -1,0 +1,16 @@
+{
+  "author": "Christian Tellnes <christian@tellnes.no> (http://christian.tellnes.com/)",
+  "name": "track",
+  "version": "0.0.1",
+  "main": "track.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tellnes/track.js.git"
+  }
+}
