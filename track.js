@@ -12,6 +12,7 @@
 
     nextTick(function() {
       firstTick = false
+      check()
     })
 
     function check() {
