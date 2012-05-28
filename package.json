@@ -12,5 +12,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/tellnes/track.js.git"
+  },
+  "publishConfig": {
+    "registry": "http://registry.npmjs.com/"
   }
 }
