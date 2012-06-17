@@ -24,9 +24,15 @@
     function self(fn) {
       var id = length++
         , cb
+        , name
 
       if (fn) {
-        cb = self()
+        if (typeof fn === 'function') {
+          cb = self()
+        } else {
+          name = String(fn)
+          fn = null
+        }
       }
 
       return function callback(err) {
@@ -40,7 +46,9 @@
 
 
         called++
+
         results[id] = args.slice(1)
+        if (name) results[name] = results[id][0]
 
 
         if (fn) {
