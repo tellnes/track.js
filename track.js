@@ -1,6 +1,6 @@
 (function() {
 
-  nextTick = process && process.nextTick || function(fn) {
+  var nextTick = (typeof process !== 'undefined') && process.nextTick || function(fn) {
     setTimeout(fn, 0)
   }
 
