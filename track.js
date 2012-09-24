@@ -21,17 +21,18 @@
       }
     }
 
-    function self(fn) {
+    function self() {
       var id = length++
-        , cb
-        , name
+        , names = []
+        , fn
 
-      if (fn) {
-        if (typeof fn === 'function') {
-          cb = self()
+      for(var i = 0, len = arguments.length, arg; i < len; i++) {
+        arg = arguments[i]
+
+        if (typeof arg === 'function') {
+          fn = arg
         } else {
-          name = String(fn)
-          fn = null
+          names.push(String(arg))
         }
       }
 
@@ -45,12 +46,6 @@
         }
 
 
-        called++
-
-        results[id] = args.slice(1)
-        if (name) results[name] = results[id][0]
-
-
         if (fn) {
           var l = fn.length - 1
 
@@ -58,15 +53,27 @@
             args.push(null)
           }
 
-          args.push(cb)
+          args.push(callback)
 
-          fn.apply(this, args)
+          var _fn = fn
+          fn = null
+
+          _fn.apply(this, args)
 
         } else if (err) {
           end && end(err)
           end = null
 
         } else {
+          called++
+
+          results[id] = args.slice(1)
+          if (names.length) {
+            for(var i = names.length; i--;) {
+              results[names[i]] = results[id][i]
+            }
+          }
+
           check()
         }
       }
@@ -78,7 +85,7 @@
 
       if (!firstTick) check()
     }
-  
+
 
     return self
   }
