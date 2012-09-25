@@ -4,6 +4,43 @@
     setTimeout(fn, 0)
   }
 
+  var EventEmitter
+  try {
+    EventEmitter = require('events').EventEmitter
+  } catch() {
+    EventEmitter = function EventEmitter() { this._events = {} }
+    EventEmitter.prototype.on = function(name, fn) {
+      if (!this._events[name]) this._events[name] = []
+      this._events[name].push(fn)
+    }
+    EventEmitter.prototype.once = function(name, fn) {
+      var listener = function() {
+        listerner.apply(this, arguments)
+        this.removeListener(name, listener)
+      }
+      listener.listener = fn
+      this.on(name, listener)
+    }
+    EventEmitter.prototype.removeListener = function(name, fn) {
+      if (this._events[name]) {
+        for(var i = 0, l = this._events[name].length; i < l; i++) {
+          if (this._events[name][i] == fn || this._events[name][i].listener == fn) {
+            this._events[name].splice(i, 1)
+            return
+          }
+        }
+      }
+    }
+    EventEmitter.prototype.emit = function(name) {
+      var args = Array.prototype.slice.call(arguments, 1)
+      if (this._events[name]) {
+        for(var i = 0, events = Array.prototype.slice.call(this._events[name]), l = events.length; i < l; i++) {
+          events[i].apply(this, args)
+        }
+      }
+    }
+  }
+
   function track(end) {
     var results = []
       , firstTick = true
@@ -79,6 +116,8 @@
       }
     }
 
+    self.__proto__ = EventEmitter.prototype
+    EventEmitter.call(self)
 
     self.end = function(fn) {
       if (fn) end = fn
