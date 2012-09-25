@@ -95,7 +95,6 @@
         while(needsIndex < needs.length) {
           var need = needs[needsIndex]
           if (!(need in results)) {
-            console.log('need', need)
             self.once(need, function() {
               process.nextTick(function() {
                 callback.apply(that, args)
