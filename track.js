@@ -11,7 +11,7 @@
   var EventEmitter
   try {
     EventEmitter = require('events').EventEmitter
-  } catch() {
+  } catch(e) {
     EventEmitter = function EventEmitter() { this._events = {} }
     EventEmitter.prototype.on = function(name, fn) {
       if (!this._events[name]) this._events[name] = []
