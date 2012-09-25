@@ -4,6 +4,10 @@
     setTimeout(fn, 0)
   }
 
+  var isArray = Array.isArray || function(obj) {
+    return Object.prototype.toString.call(obj) === '[object Array]'
+  }
+
   var EventEmitter
   try {
     EventEmitter = require('events').EventEmitter
@@ -62,12 +66,16 @@
       var id = length++
         , names = []
         , fn
+        , needs = []
+        , needsIndex = 0
 
       for(var i = 0, len = arguments.length, arg; i < len; i++) {
         arg = arguments[i]
 
         if (typeof arg === 'function') {
           fn = arg
+        } else if (isArray(arg)) {
+          needs.push.apply(needs, arg)
         } else {
           names.push(String(arg))
         }
@@ -75,17 +83,37 @@
 
       return function callback(err) {
         var args = Array.prototype.slice.call(arguments)
+          , that = this
 
         if (firstTick) {
-          args.unshift(this)
-          nextTick(callback.bind.apply(callback, args))
+          nextTick(function() {
+            callback.apply(that, args)
+          })
           return
         }
 
+        while(needsIndex < needs.length) {
+          var need = needs[needsIndex]
+          if (!(need in results)) {
+            console.log('need', need)
+            self.once(need, function() {
+              process.nextTick(function() {
+                callback.apply(that, args)
+              })
+            })
+            return
+          }
+          needsIndex++
+        }
 
         if (fn) {
-          var l = fn.length - 1
+          var i, l
 
+          for(i = 0, l = needs.length; i < l; i++) {
+            args.push(results[needs[i]])
+          }
+
+          l = fn.length - 1
           while (l > args.length) {
             args.push(null)
           }
@@ -108,6 +136,7 @@
           if (names.length) {
             for(var i = names.length; i--;) {
               results[names[i]] = results[id][i]
+              self.emit(names[i], results[id][i])
             }
           }
 
