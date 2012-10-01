@@ -45,11 +45,12 @@
     }
   }
 
-  function track(end) {
+  function track() {
     var results = []
       , firstTick = true
       , length = 0
       , called = 0
+      , end
 
     nextTick(function() {
       firstTick = false
