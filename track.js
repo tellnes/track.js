@@ -90,7 +90,7 @@
           nextTick(function() {
             callback.apply(that, args)
           })
-          return
+          return self
         }
 
         while(needsIndex < needs.length) {
@@ -139,6 +139,8 @@
 
           check()
         }
+
+        return self
       }
     }
 
