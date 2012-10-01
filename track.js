@@ -65,7 +65,7 @@
     function self() {
       var id = length++
         , names = []
-        , fn
+        , fns = []
         , needs = []
         , needsIndex = 0
 
@@ -73,7 +73,7 @@
         arg = arguments[i]
 
         if (typeof arg === 'function') {
-          fn = arg
+          fns.push(arg)
         } else if (isArray(arg)) {
           needs.push.apply(needs, arg)
         } else {
@@ -105,24 +105,21 @@
           needsIndex++
         }
 
-        if (fn) {
+        if (fns.length) {
           var i, l
 
           for(i = 0, l = needs.length; i < l; i++) {
             args.push(results[needs[i]])
           }
 
-          l = fn.length - 1
+          l = fns[0].length - 1
           while (l > args.length) {
             args.push(null)
           }
 
           args.push(callback)
 
-          var _fn = fn
-          fn = null
-
-          _fn.apply(this, args)
+          var fn = fns.shift().apply(this, args)
 
         } else if (err) {
           end && end(err)
