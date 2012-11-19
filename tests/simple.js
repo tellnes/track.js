@@ -61,3 +61,30 @@ test('needs', function(ta) {
     ta.end()
   })
 })
+
+test('empty needs', function(ta) {
+  var t = track()
+
+  t('hello', function(cb) {
+    cb(null, 'hello world')
+  })()
+
+  t('empty', 'value', [false, 'hello'], function(empty, hello, cb) {
+    cb(null, empty, hello)
+  })()
+
+  t.end(function(err, tr) {
+    ta.notOk(err, 'no errors')
+
+    ta.deepEqual(tr[1], [undefined, 'hello world'])
+
+    ta.equal(tr.empty, undefined)
+    ta.equal(tr.value, 'hello world')
+
+    ta.equal(tr.length, 2)
+
+    ta.equal(Object.keys(tr).length, 5)
+
+    ta.end()
+  })
+})

@@ -1,4 +1,4 @@
-(function() {
+;(function(undefined) {
 
   var nextTick = (typeof process !== 'undefined') && process.nextTick || function(fn) {
     setTimeout(fn, 0)
@@ -95,7 +95,7 @@
 
         while(needsIndex < needs.length) {
           var need = needs[needsIndex]
-          if (!(need in results)) {
+          if (need && !(need in results)) {
             self.once(need, function() {
               process.nextTick(function() {
                 callback.apply(that, args)
@@ -110,7 +110,7 @@
           var i, l
 
           for(i = 0, l = needs.length; i < l; i++) {
-            args.push(results[needs[i]])
+            args.push(needs[i] ? results[needs[i]] : undefined)
           }
 
           l = fns[0].length - 1
