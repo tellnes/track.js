@@ -46,13 +46,13 @@ test('needs', function(ta) {
     ta.notOk(err, 'no errors')
 
     ta.equal(tr.hello, 'hello')
-    ta.deepEqual(tr[0], ['hello'])
+    ta.deepEqual(tr[0], 'hello')
 
     ta.equal(tr.world, 'world')
-    ta.deepEqual(tr[1], ['world'])
+    ta.deepEqual(tr[1], 'world')
 
     ta.equal(tr.concat, 'hello world')
-    ta.deepEqual(tr[2], ['hello world'])
+    ta.deepEqual(tr[2], 'hello world')
 
     ta.equal(tr.length, 3)
 
@@ -76,7 +76,7 @@ test('empty needs', function(ta) {
   t.end(function(err, tr) {
     ta.notOk(err, 'no errors')
 
-    ta.deepEqual(tr[1], [undefined, 'hello world'])
+    ta.deepEqual(tr[1], undefined)
 
     ta.equal(tr.empty, undefined)
     ta.equal(tr.value, 'hello world')

@@ -129,11 +129,11 @@
         } else {
           called++
 
-          results[id] = args.slice(1)
+          results[id] = args[1]
           if (names.length) {
             for(var i = names.length; i--;) {
-              results[names[i]] = results[id][i]
-              self.emit(names[i], results[id][i])
+              results[names[i]] = args[i + 1]
+              self.emit(names[i], args[i + 1])
             }
           }
 
