@@ -15,6 +15,6 @@ add(3, 4, t('sum2'))
 t('result', ['sum1', 'sum2'], add)()
 
 t.end(function (err, results) {
-  if (err) throw err;
+  if (err) throw err
   console.log('result=' + results.result)
 })

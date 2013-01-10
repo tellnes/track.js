@@ -10,13 +10,13 @@ function add(x, y, cb) {
    }, 10)
 }
 
-add(1, 2, t('sum1'))
-add(3, 7, t('sum2'))
-add(5, 10, t('sum3'))
-t('sum1+sum2', ['sum1', 'sum2'], add)()
-t('result', ['sum1+sum2', 'sum3'], add)()
+t('sum1', add)(1, 2) // 3
+t('sum2', add)(3, 4) // 7
+t('sum3', add)(5, 6) // 11
+t('s1+s2', add)(t.sum1, t.sum2)
+t('result', add)(t['s1+s2'], t.sum3)
 
 t.end(function (err, results) {
-  if (err) throw err;
+  if (err) throw err
   console.log('result=' + results.result)
 })
