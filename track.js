@@ -63,6 +63,13 @@
       }
     }
 
+    function Dependency(name) {
+      this.name = name
+    }
+    Dependency.prototype.valueOf = function () {
+      return results[this.name]
+    }
+
     function self() {
       var id = length++
         , names = []
@@ -78,13 +85,17 @@
         } else if (isArray(arg)) {
           dependencies.push.apply(dependencies, arg)
         } else {
-          names.push(String(arg))
+          arg = String(arg)
+          names.push(arg)
+          self[arg] = new Dependency(arg)
         }
       }
 
       return function callback(err) {
         var args = Array.prototype.slice.call(arguments)
           , that = this
+          , i
+          , l
 
         if (firstTick) {
           nextTick(function() {
@@ -92,6 +103,14 @@
           })
           return self
         }
+
+        args = args.filter(function (arg) {
+          if (arg instanceof Dependency) {
+            dependencies.unshift(arg.name)
+            return false
+          }
+          return true
+        })
 
         while(dependencyIndex < dependencies.length) {
           var dependency = dependencies[dependencyIndex]
@@ -107,8 +126,6 @@
         }
 
         if (fns.length) {
-          var i, l
-
           for(i = 0, l = dependencies.length; i < l; i++) {
             args.push(dependencies[i] ? results[dependencies[i]] : undefined)
           }
@@ -131,7 +148,7 @@
 
           results[id] = args[1]
           if (names.length) {
-            for(var i = names.length; i--;) {
+            for(i = names.length; i--;) {
               results[names[i]] = args[i + 1]
               self.emit(names[i], args[i + 1])
             }
