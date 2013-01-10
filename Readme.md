@@ -11,7 +11,7 @@
 var track = require('track')
 ```
 
-## Usage
+## Express example
 
 ```js
 app.get('/', function(req, res, next) {
@@ -27,6 +27,24 @@ app.get('/', function(req, res, next) {
     res.render('something', locals)
   })
 
+```
+
+## Hello World example
+
+```js
+var t = track()
+
+t('name', function (cb) {
+  cb(null, 'World')
+})()
+
+t('hello', ['name'], function (name, cb) {
+  cb(null, 'Hello ' + name)
+})()
+
+t.end(function(err, results) {
+  console.log(results.hello === 'Hello World')
+})
 ```
 
 ## Licence
