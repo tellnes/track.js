@@ -14,19 +14,19 @@ var track = require('track')
 ## Express example
 
 ```js
-app.get('/', function(req, res, next) {
+app.get('/', function (req, res, next) {
   var t = track()
 
   db.select('user', t('user'))
 
   db.select('data', t('data'))
 
-  t.end(function(err, locals) {
+  t.end(function (err, locals) {
     if (err) return next(err)
 
     res.render('something', locals)
   })
-
+})
 ```
 
 ## Hello World example
@@ -42,7 +42,7 @@ t('hello', ['name'], function (name, cb) {
   cb(null, 'Hello ' + name)
 })()
 
-t.end(function(err, results) {
+t.end(function (err, results) {
   console.log(results.hello === 'Hello World')
 })
 ```
