@@ -67,8 +67,8 @@
       var id = length++
         , names = []
         , fns = []
-        , needs = []
-        , needsIndex = 0
+        , dependencies = []
+        , dependencyIndex = 0
 
       for(var i = 0, len = arguments.length, arg; i < len; i++) {
         arg = arguments[i]
@@ -76,7 +76,7 @@
         if (typeof arg === 'function') {
           fns.push(arg)
         } else if (isArray(arg)) {
-          needs.push.apply(needs, arg)
+          dependencies.push.apply(dependencies, arg)
         } else {
           names.push(String(arg))
         }
@@ -93,24 +93,24 @@
           return self
         }
 
-        while(needsIndex < needs.length) {
-          var need = needs[needsIndex]
-          if (need && !(need in results)) {
-            self.once(need, function() {
+        while(dependencyIndex < dependencies.length) {
+          var dependency = dependencies[dependencyIndex]
+          if (dependency && !(dependency in results)) {
+            self.once(dependency, function() {
               process.nextTick(function() {
                 callback.apply(that, args)
               })
             })
             return
           }
-          needsIndex++
+          dependencyIndex++
         }
 
         if (fns.length) {
           var i, l
 
-          for(i = 0, l = needs.length; i < l; i++) {
-            args.push(needs[i] ? results[needs[i]] : undefined)
+          for(i = 0, l = dependencies.length; i < l; i++) {
+            args.push(dependencies[i] ? results[dependencies[i]] : undefined)
           }
 
           l = fns[0].length - 1
